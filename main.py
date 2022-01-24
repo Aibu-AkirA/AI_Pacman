@@ -2,6 +2,7 @@ import sys
 import pygame
 from pygame.locals import *
 import time
+import re
 
 pygame.init()
 
@@ -9,6 +10,8 @@ screen = pygame.display.set_mode((600, 600))
 background = pygame.image.load("./image/mainScreen.jpg")
 pygame.display.set_caption("PAC-MAN")
 pac_image = pygame.image.load("./image/pac_man600.png")
+cookie_image = pygame.image.load("./image/cookie600.png")
+cookieBig_image = pygame.image.load("./image/cookie_Big600.png")
 
 x, y = 261, 333
 pacNow_Pos = [x, y]
@@ -27,12 +30,19 @@ sizeList = [3, 6, 540, 594, "600"]
 with open('./data/roadPosition', 'r') as f:
     roadPosition = f.read()
 
+with open('./data/cookiePosition', 'r') as f:
+    data = f.read()
+cookiePosition = data.splitlines()
+
+cookieBigPosition = ['[7, 22]', '[82, 22]', '[7, 91]', '[82, 91]']
+
 
 def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
     global pac_image, imgCount, pacOld_Dir
+    global cookiePosition, cookieBigPosition
 
     while True:
-
+        # -----------------------------pacman-----------------------------
         pacNext_Pos[pacNext_XY] = pacNow_Pos[pacNext_XY] + pacNext_Value
         pacNext_Pos[0] = pacNext_Pos[0] % size_L[2]
         pacNext_Pos[1] = pacNext_Pos[1] % size_L[3]
@@ -88,18 +98,61 @@ def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
             pacOld_Pos[0] = pacNow_Pos[0]
             pacOld_Pos[1] = pacNow_Pos[1]
 
+        pacNow_Pos2rP[0] = int((pacNow_Pos[0] - size_L[0]) / size_L[1])
+        pacNow_Pos2rP[1] = int((pacNow_Pos[1] - size_L[0]) / size_L[1])
+
+        # -----------------------------pacman-----------------------------
+        # -----------------------------cookie-------------------------------
+        if str(pacNow_Pos2rP) in cookiePosition:
+            cookiePosition.remove(str(pacNow_Pos2rP))
+            # score += 1
+
+        if str(pacNow_Pos2rP) in cookieBigPosition:
+            cookieBigPosition.remove(str(pacNow_Pos2rP))
+            # ghost_RunTime = 150
+            # score += 50
+
+        # -----------------------------cookie-------------------------------
+        # ---- image reset ----
+
         pac_rect = pac_image.get_rect()
         pac_rect.center = pacNow_Pos
 
+        cookie_rect = cookie_image.get_rect()
+        cookieBig_rect = cookieBig_image.get_rect()
+
         screen.blit(background, (0, 0))
+
+        for i in cookiePosition:
+            i = re.sub(r"[^ 0-9]", "", i)
+            i = i.split()
+            i = list(map(int, i))
+            i[0] = i[0] * 6 + 3
+            i[1] = i[1] * 6 + 3
+
+            cookie_rect.center = i
+
+            screen.blit(cookie_image, cookie_rect)
+
+        for i in cookieBigPosition:
+            i = re.sub(r"[^ 0-9]", "", i)
+            i = i.split()
+            i = list(map(int, i))
+            i[0] = i[0] * 6 + 3
+            i[1] = i[1] * 6 + 3
+
+            cookieBig_rect.center = i
+
+            screen.blit(cookieBig_image, cookieBig_rect)
+
         screen.blit(pac_image, pac_rect)
 
         pygame.display.update()
-
+        # ---- image reset ----
         for event2 in pygame.event.get():
             if event2.type == QUIT:
                 pygame.quit()
-                sys.exit
+                sys.exit()
             if event2.type == KEYDOWN:
                 if event2.key == K_LEFT:
                     playGame(0, -size_L[1], size_L, 'le')
@@ -121,7 +174,7 @@ def main():
         for event2 in pygame.event.get():
             if event2.type == QUIT:
                 pygame.quit()
-                sys.exit
+                sys.exit()
             if event2.type == KEYUP:
                 if event2.key == ord('a'):
                     screen = pygame.display.set_mode((540, 594))
@@ -130,14 +183,39 @@ def main():
                     pac_rect = pac_image.get_rect()
                     pac_rect.center = pacNow_Pos
 
+                    cookie_rect = cookie_image.get_rect()
+                    cookieBig_rect = cookieBig_image.get_rect()
+
                     screen.blit(background, (0, 0))
-                    screen.blit(pac_image, pac_rect)
+
+                    for i in cookiePosition:
+                        i = re.sub(r"[^ 0-9]", "", i)
+                        i = i.split()
+                        i = list(map(int, i))
+                        i[0] = i[0] * 6 + 3
+                        i[1] = i[1] * 6 + 3
+
+                        cookie_rect.center = i
+
+                        screen.blit(cookie_image, cookie_rect)
+
+                    for i in cookieBigPosition:
+                        i = re.sub(r"[^ 0-9]", "", i)
+                        i = i.split()
+                        i = list(map(int, i))
+                        i[0] = i[0] * 6 + 3
+                        i[1] = i[1] * 6 + 3
+
+                        cookieBig_rect.center = i
+
+                        screen.blit(cookieBig_image, cookieBig_rect)
+                        screen.blit(pac_image, pac_rect)
 
                     pygame.display.update()
                     playGame(pacOld_Move[0], pacOld_Move[1], sizeList, pacOld_Dir)
 
     pygame.quit()
-    sys.exit
+    sys.exit()
 
 
 if __name__ == '__main__':
