@@ -13,6 +13,12 @@ pac_image = pygame.image.load("./image/pac_man600.png")
 cookie_image = pygame.image.load("./image/cookie600.png")
 cookieBig_image = pygame.image.load("./image/cookie_Big600.png")
 
+# Start screen
+startScreen = 59
+startCenter = [270, 282]
+gameStage = 1
+
+# Pacman data
 x, y = 261, 333
 pacNow_Pos = [x, y]
 pacNow_Pos2rP = [0, 0]
@@ -25,94 +31,132 @@ pacOld_Dir = 'le'
 
 imgCount = 1
 imgList = ['1', '2', '3', '1', '2']
-
 sizeList = [3, 6, 540, 594, "600"]
+
+# Data of position
 with open('./data/roadPosition', 'r') as f:
     roadPosition = f.read()
 
+with open('./data/roadPositionGhost', 'r') as f:
+    ghostRoadPos = f.read()
+
 with open('./data/cookiePosition', 'r') as f:
     data = f.read()
-cookiePosition = data.splitlines()
 
+cookiePosition = data.splitlines()
 cookieBigPosition = ['[7, 22]', '[82, 22]', '[7, 91]', '[82, 91]']
+
+
+def startImgRe(sleepTime, cSS, size_L, num=""):
+    global startScreen
+    time.sleep(sleepTime)
+    startScreen -= 1
+    return pygame.image.load("./image/" + cSS + size_L + num + ".png")
 
 
 def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
     global pac_image, imgCount, pacOld_Dir
     global cookiePosition, cookieBigPosition
+    global gameStage, startScreen
 
-    while True:
-        # -----------------------------pacman-----------------------------
-        pacNext_Pos[pacNext_XY] = pacNow_Pos[pacNext_XY] + pacNext_Value
-        pacNext_Pos[0] = pacNext_Pos[0] % size_L[2]
-        pacNext_Pos[1] = pacNext_Pos[1] % size_L[3]
+    while gameStage != 6:
 
-        pacNext_Pos2rP[0] = int((pacNext_Pos[0] - size_L[0]) / size_L[1])
-        pacNext_Pos2rP[1] = int((pacNext_Pos[1] - size_L[0]) / size_L[1])
+        if startScreen > 59:
+            start_img = startImgRe(0.15, "clear", size_L[4])
 
-        pacOld_Pos[pacOld_Move[0]] = pacNow_Pos[pacOld_Move[0]] + pacOld_Move[1]
-        pacOld_Pos[0] = pacOld_Pos[0] % size_L[2]
-        pacOld_Pos[1] = pacOld_Pos[1] % size_L[3]
-        pacOld_Pos2rP[0] = int((pacOld_Pos[0] - size_L[0]) / size_L[1])
-        pacOld_Pos2rP[1] = int((pacOld_Pos[1] - size_L[0]) / size_L[1])
+        elif startScreen > 49:
+            start_img = startImgRe(0.15, "stage", size_L[4],  "0")
 
-        time.sleep(0.06)
+        elif startScreen > 39:
+            start_img = startImgRe(0.07, "stage", size_L[4],  str(gameStage))
 
-        if str(pacOld_Pos2rP) in roadPosition and str(pacNext_Pos2rP) not in roadPosition:
-
-            pacNow_Pos[pacOld_Move[0]] = pacNow_Pos[pacOld_Move[0]] + pacOld_Move[1]
-
-            pac_image = pygame.image.load("./image/pac_man" + size_L[4] + imgList[imgCount] + pacOld_Dir + ".png")
-            if imgCount == 4:
-                imgCount = 0
-            else:
-                imgCount += 1
-
-            pacNext_Pos[0] = pacNow_Pos[0]
-            pacNext_Pos[1] = pacNow_Pos[1]
-
-        elif str(pacNext_Pos2rP) in roadPosition:
-
-            pacNow_Pos[pacNext_XY] = pacNow_Pos[pacNext_XY] + pacNext_Value
-
-            pacNow_Pos[0] = pacNow_Pos[0] % size_L[2]
-            pacNow_Pos[1] = pacNow_Pos[1] % size_L[3]
-
-            pac_image = pygame.image.load("./image/pac_man" + size_L[4] + imgList[imgCount] + getDir + ".png")
-            pacOld_Dir = getDir
-            if imgCount == 4:
-                imgCount = 0
-            else:
-                imgCount += 1
-
-            pacOld_Move[0] = pacNext_XY
-            pacOld_Move[1] = pacNext_Value
-
-            pacOld_Pos[0] = pacNow_Pos[0]
-            pacOld_Pos[1] = pacNow_Pos[1]
+        elif startScreen > 0:
+            start_img = startImgRe(0.08, "start", size_L[4], str(int(startScreen / 10)))
 
         else:
-            pacNext_Pos[0] = pacNow_Pos[0]
-            pacNext_Pos[1] = pacNow_Pos[1]
 
-            pacOld_Pos[0] = pacNow_Pos[0]
-            pacOld_Pos[1] = pacNow_Pos[1]
+            # -----------------------------pacman-----------------------------
+            pacNext_Pos[pacNext_XY] = pacNow_Pos[pacNext_XY] + pacNext_Value
+            pacNext_Pos[0] = pacNext_Pos[0] % size_L[2]
+            pacNext_Pos[1] = pacNext_Pos[1] % size_L[3]
 
-        pacNow_Pos2rP[0] = int((pacNow_Pos[0] - size_L[0]) / size_L[1])
-        pacNow_Pos2rP[1] = int((pacNow_Pos[1] - size_L[0]) / size_L[1])
+            pacNext_Pos2rP[0] = int((pacNext_Pos[0] - size_L[0]) / size_L[1])
+            pacNext_Pos2rP[1] = int((pacNext_Pos[1] - size_L[0]) / size_L[1])
 
-        # -----------------------------pacman-----------------------------
-        # -----------------------------cookie-------------------------------
-        if str(pacNow_Pos2rP) in cookiePosition:
-            cookiePosition.remove(str(pacNow_Pos2rP))
-            # score += 1
+            pacOld_Pos[pacOld_Move[0]] = pacNow_Pos[pacOld_Move[0]] + pacOld_Move[1]
+            pacOld_Pos[0] = pacOld_Pos[0] % size_L[2]
+            pacOld_Pos[1] = pacOld_Pos[1] % size_L[3]
+            pacOld_Pos2rP[0] = int((pacOld_Pos[0] - size_L[0]) / size_L[1])
+            pacOld_Pos2rP[1] = int((pacOld_Pos[1] - size_L[0]) / size_L[1])
 
-        if str(pacNow_Pos2rP) in cookieBigPosition:
-            cookieBigPosition.remove(str(pacNow_Pos2rP))
-            # ghost_RunTime = 150
-            # score += 50
+            time.sleep(0.06)
 
-        # -----------------------------cookie-------------------------------
+            if str(pacOld_Pos2rP) in roadPosition and str(pacNext_Pos2rP) not in roadPosition:
+
+                pacNow_Pos[pacOld_Move[0]] = pacNow_Pos[pacOld_Move[0]] + pacOld_Move[1]
+
+                pac_image = pygame.image.load("./image/pac_man" + size_L[4] + imgList[imgCount] + pacOld_Dir + ".png")
+                if imgCount == 4:
+                    imgCount = 0
+                else:
+                    imgCount += 1
+
+                pacNext_Pos[0] = pacNow_Pos[0]
+                pacNext_Pos[1] = pacNow_Pos[1]
+
+            elif str(pacNext_Pos2rP) in roadPosition:
+
+                pacNow_Pos[pacNext_XY] = pacNow_Pos[pacNext_XY] + pacNext_Value
+
+                pacNow_Pos[0] = pacNow_Pos[0] % size_L[2]
+                pacNow_Pos[1] = pacNow_Pos[1] % size_L[3]
+
+                pac_image = pygame.image.load("./image/pac_man" + size_L[4] + imgList[imgCount] + getDir + ".png")
+                pacOld_Dir = getDir
+                if imgCount == 4:
+                    imgCount = 0
+                else:
+                    imgCount += 1
+
+                pacOld_Move[0] = pacNext_XY
+                pacOld_Move[1] = pacNext_Value
+
+                pacOld_Pos[0] = pacNow_Pos[0]
+                pacOld_Pos[1] = pacNow_Pos[1]
+
+            else:
+                pacNext_Pos[0] = pacNow_Pos[0]
+                pacNext_Pos[1] = pacNow_Pos[1]
+
+                pacOld_Pos[0] = pacNow_Pos[0]
+                pacOld_Pos[1] = pacNow_Pos[1]
+
+            pacNow_Pos2rP[0] = int((pacNow_Pos[0] - size_L[0]) / size_L[1])
+            pacNow_Pos2rP[1] = int((pacNow_Pos[1] - size_L[0]) / size_L[1])
+
+            # -----------------------------pacman-----------------------------
+            # -----------------------------cookie-------------------------------
+            if str(pacNow_Pos2rP) in cookiePosition:
+                cookiePosition.remove(str(pacNow_Pos2rP))
+
+            if str(pacNow_Pos2rP) in cookieBigPosition:
+                cookieBigPosition.remove(str(pacNow_Pos2rP))
+                # ghost_RunTime = 150
+
+            # -----------------------------cookie-------------------------------
+            if len(cookiePosition) == 0 and len(cookieBigPosition) == 0:
+                pacNow_Pos[0] = (44 * size_L[1]) + size_L[0]
+                pacNow_Pos[1] = (55 * size_L[1]) + size_L[0]
+                pacNext_Pos[0] = pacNow_Pos[0]
+                pacOld_Pos[1] = pacNow_Pos[1]
+                pacOld_Pos[0] = pacNow_Pos[0]
+                pacOld_Pos[1] = pacNow_Pos[1]
+
+                startScreen = 69
+                gameStage += 1
+
+                cookiePosition = data.splitlines()
+
         # ---- image reset ----
 
         pac_rect = pac_image.get_rect()
@@ -146,6 +190,12 @@ def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
             screen.blit(cookieBig_image, cookieBig_rect)
 
         screen.blit(pac_image, pac_rect)
+
+        if startScreen != 0:
+            start_rect = start_img.get_rect()
+            start_rect.center = startCenter
+
+            screen.blit(start_img, start_rect)
 
         pygame.display.update()
         # ---- image reset ----
