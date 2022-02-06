@@ -35,6 +35,9 @@ pacOld_Move = [0, -6]
 pacOld_Pos = [x, y]
 pacOld_Pos2rP = [0, 0]  # rP is roadPosition
 pacOld_Dir = 'le'
+pacJudgment = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
+pacLife = 5
+pacLifePos = [[7, 85], [7, 82], [7, 79], [7, 76], [7, 73]]
 
 imgCount = 1
 imgList = ['1', '2', '3', '1', '2']
@@ -133,7 +136,7 @@ def startImgRe(sleepTime, cSS, size_L, num=""):
 
 
 def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
-    global pac_image, imgCount, pacOld_Dir
+    global pac_image, imgCount, pacOld_Dir, pacLife
     global cookiePosition, cookieBigPosition
     global gameStage, startScreen, start_img
     global red_image, red_Dir, redEat, redNow_pos2rP
@@ -230,38 +233,26 @@ def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
             if redEat == 0:
                 if ghost_RunTime == 0:
                     if ghostChScCheck > 0:
-                        redToPac[0] = ((pacNow_Pos2rP[0] - redCheck_pos2rP[0]) ** 2 + (
-                                pacNow_Pos2rP[1] - (redCheck_pos2rP[1] - 1)) ** 2)
-                        redToPac[1] = ((pacNow_Pos2rP[0] - (redCheck_pos2rP[0] - 1)) ** 2 + (
-                                pacNow_Pos2rP[1] - redCheck_pos2rP[1]) ** 2)
-                        redToPac[2] = ((pacNow_Pos2rP[0] - redCheck_pos2rP[0]) ** 2 + (
-                                pacNow_Pos2rP[1] - (redCheck_pos2rP[1] + 1)) ** 2)
-                        redToPac[3] = ((pacNow_Pos2rP[0] - (redCheck_pos2rP[0] + 1)) ** 2 + (
-                                pacNow_Pos2rP[1] - redCheck_pos2rP[1]) ** 2)
+                        redToPac[0] = ((pacNow_Pos2rP[0] - redCheck_pos2rP[0]) ** 2 + (pacNow_Pos2rP[1] - (redCheck_pos2rP[1] - 1)) ** 2)
+                        redToPac[1] = ((pacNow_Pos2rP[0] - (redCheck_pos2rP[0] - 1)) ** 2 + (pacNow_Pos2rP[1] - redCheck_pos2rP[1]) ** 2)
+                        redToPac[2] = ((pacNow_Pos2rP[0] - redCheck_pos2rP[0]) ** 2 + (pacNow_Pos2rP[1] - (redCheck_pos2rP[1] + 1)) ** 2)
+                        redToPac[3] = ((pacNow_Pos2rP[0] - (redCheck_pos2rP[0] + 1)) ** 2 + (pacNow_Pos2rP[1] - redCheck_pos2rP[1]) ** 2)
                         redToPac[red_Dir[1]] = 1000000
 
                     else:
-                        redToPac[0] = ((red_disperse[0] - redCheck_pos2rP[0]) ** 2 + (
-                                red_disperse[1] - (redCheck_pos2rP[1] - 1)) ** 2)
-                        redToPac[1] = ((red_disperse[0] - (redCheck_pos2rP[0] - 1)) ** 2 + (
-                                red_disperse[1] - redCheck_pos2rP[1]) ** 2)
-                        redToPac[2] = ((red_disperse[0] - redCheck_pos2rP[0]) ** 2 + (
-                                red_disperse[1] - (redCheck_pos2rP[1] + 1)) ** 2)
-                        redToPac[3] = ((red_disperse[0] - (redCheck_pos2rP[0] + 1)) ** 2 + (
-                                red_disperse[1] - redCheck_pos2rP[1]) ** 2)
+                        redToPac[0] = ((red_disperse[0] - redCheck_pos2rP[0]) ** 2 + (red_disperse[1] - (redCheck_pos2rP[1] - 1)) ** 2)
+                        redToPac[1] = ((red_disperse[0] - (redCheck_pos2rP[0] - 1)) ** 2 + (red_disperse[1] - redCheck_pos2rP[1]) ** 2)
+                        redToPac[2] = ((red_disperse[0] - redCheck_pos2rP[0]) ** 2 + (red_disperse[1] - (redCheck_pos2rP[1] + 1)) ** 2)
+                        redToPac[3] = ((red_disperse[0] - (redCheck_pos2rP[0] + 1)) ** 2 + (red_disperse[1] - redCheck_pos2rP[1]) ** 2)
                         redToPac[red_Dir[1]] = 1000000
 
                 else:
                     ghost_Run[0] = random.randrange(7, 83)
                     ghost_Run[1] = random.randrange(7, 92)
-                    redToPac[0] = ((ghost_Run[0] - redCheck_pos2rP[0]) ** 2 + (
-                            ghost_Run[1] - (redCheck_pos2rP[1] - 1)) ** 2)
-                    redToPac[1] = ((ghost_Run[0] - (redCheck_pos2rP[0] - 1)) ** 2 + (
-                            ghost_Run[1] - redCheck_pos2rP[1]) ** 2)
-                    redToPac[2] = ((ghost_Run[0] - redCheck_pos2rP[0]) ** 2 + (
-                            ghost_Run[1] - (redCheck_pos2rP[1] + 1)) ** 2)
-                    redToPac[3] = ((ghost_Run[0] - (redCheck_pos2rP[0] + 1)) ** 2 + (
-                            ghost_Run[1] - redCheck_pos2rP[1]) ** 2)
+                    redToPac[0] = ((ghost_Run[0] - redCheck_pos2rP[0]) ** 2 + (ghost_Run[1] - (redCheck_pos2rP[1] - 1)) ** 2)
+                    redToPac[1] = ((ghost_Run[0] - (redCheck_pos2rP[0] - 1)) ** 2 + (ghost_Run[1] - redCheck_pos2rP[1]) ** 2)
+                    redToPac[2] = ((ghost_Run[0] - redCheck_pos2rP[0]) ** 2 + (ghost_Run[1] - (redCheck_pos2rP[1] + 1)) ** 2)
+                    redToPac[3] = ((ghost_Run[0] - (redCheck_pos2rP[0] + 1)) ** 2 + (ghost_Run[1] - redCheck_pos2rP[1]) ** 2)
                     redToPac[red_Dir[1]] = 1000000
 
                 for i in range(4):
@@ -298,6 +289,7 @@ def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
             redNow_pos[0] = redNow_pos2rP[0] * size_L[1] + size_L[0]
             redNow_pos[1] = redNow_pos2rP[1] * size_L[1] + size_L[0]
             # -----------------------------red--------------------------------
+
             # -----------------------------blue-------------------------------
             blueCheck_pos2rP[0] = int((blueNow_pos[0] - size_L[0]) / size_L[1])
             blueCheck_pos2rP[1] = int((blueNow_pos[1] - size_L[0]) / size_L[1])
@@ -312,38 +304,26 @@ def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
             if blueEat == 0:
                 if ghost_RunTime == 0:
                     if ghostChScCheck > 0:
-                        blueToPac[0] = ((blue_target[0] - blueCheck_pos2rP[0]) ** 2 + (
-                                    blue_target[1] - (blueCheck_pos2rP[1] - 1)) ** 2)
-                        blueToPac[1] = ((blue_target[0] - (blueCheck_pos2rP[0] - 1)) ** 2 + (
-                                    blue_target[1] - blueCheck_pos2rP[1]) ** 2)
-                        blueToPac[2] = ((blue_target[0] - blueCheck_pos2rP[0]) ** 2 + (
-                                    blue_target[1] - (blueCheck_pos2rP[1] + 1)) ** 2)
-                        blueToPac[3] = ((blue_target[0] - (blueCheck_pos2rP[0] + 1)) ** 2 + (
-                                    blue_target[1] - blueCheck_pos2rP[1]) ** 2)
+                        blueToPac[0] = ((blue_target[0] - blueCheck_pos2rP[0]) ** 2 + (blue_target[1] - (blueCheck_pos2rP[1] - 1)) ** 2)
+                        blueToPac[1] = ((blue_target[0] - (blueCheck_pos2rP[0] - 1)) ** 2 + (blue_target[1] - blueCheck_pos2rP[1]) ** 2)
+                        blueToPac[2] = ((blue_target[0] - blueCheck_pos2rP[0]) ** 2 + (blue_target[1] - (blueCheck_pos2rP[1] + 1)) ** 2)
+                        blueToPac[3] = ((blue_target[0] - (blueCheck_pos2rP[0] + 1)) ** 2 + (blue_target[1] - blueCheck_pos2rP[1]) ** 2)
                         blueToPac[blue_Dir[1]] = 1000000
 
                     else:
-                        blueToPac[0] = ((blue_disperse[0] - blueCheck_pos2rP[0]) ** 2 + (
-                                    blue_disperse[1] - (blueCheck_pos2rP[1] - 1)) ** 2)
-                        blueToPac[1] = ((blue_disperse[0] - (blueCheck_pos2rP[0] - 1)) ** 2 + (
-                                    blue_disperse[1] - blueCheck_pos2rP[1]) ** 2)
-                        blueToPac[2] = ((blue_disperse[0] - blueCheck_pos2rP[0]) ** 2 + (
-                                    blue_disperse[1] - (blueCheck_pos2rP[1] + 1)) ** 2)
-                        blueToPac[3] = ((blue_disperse[0] - (blueCheck_pos2rP[0] + 1)) ** 2 + (
-                                    blue_disperse[1] - blueCheck_pos2rP[1]) ** 2)
+                        blueToPac[0] = ((blue_disperse[0] - blueCheck_pos2rP[0]) ** 2 + (blue_disperse[1] - (blueCheck_pos2rP[1] - 1)) ** 2)
+                        blueToPac[1] = ((blue_disperse[0] - (blueCheck_pos2rP[0] - 1)) ** 2 + (blue_disperse[1] - blueCheck_pos2rP[1]) ** 2)
+                        blueToPac[2] = ((blue_disperse[0] - blueCheck_pos2rP[0]) ** 2 + (blue_disperse[1] - (blueCheck_pos2rP[1] + 1)) ** 2)
+                        blueToPac[3] = ((blue_disperse[0] - (blueCheck_pos2rP[0] + 1)) ** 2 + (blue_disperse[1] - blueCheck_pos2rP[1]) ** 2)
                         blueToPac[blue_Dir[1]] = 1000000
 
                 else:
                     ghost_Run[0] = random.randrange(7, 83)
                     ghost_Run[1] = random.randrange(7, 92)
-                    blueToPac[0] = ((ghost_Run[0] - blueCheck_pos2rP[0]) ** 2 + (
-                                ghost_Run[1] - (blueCheck_pos2rP[1] - 1)) ** 2)
-                    blueToPac[1] = ((ghost_Run[0] - (blueCheck_pos2rP[0] - 1)) ** 2 + (
-                                ghost_Run[1] - blueCheck_pos2rP[1]) ** 2)
-                    blueToPac[2] = ((ghost_Run[0] - blueCheck_pos2rP[0]) ** 2 + (
-                                ghost_Run[1] - (blueCheck_pos2rP[1] + 1)) ** 2)
-                    blueToPac[3] = ((ghost_Run[0] - (blueCheck_pos2rP[0] + 1)) ** 2 + (
-                                ghost_Run[1] - blueCheck_pos2rP[1]) ** 2)
+                    blueToPac[0] = ((ghost_Run[0] - blueCheck_pos2rP[0]) ** 2 + (ghost_Run[1] - (blueCheck_pos2rP[1] - 1)) ** 2)
+                    blueToPac[1] = ((ghost_Run[0] - (blueCheck_pos2rP[0] - 1)) ** 2 + (ghost_Run[1] - blueCheck_pos2rP[1]) ** 2)
+                    blueToPac[2] = ((ghost_Run[0] - blueCheck_pos2rP[0]) ** 2 + (ghost_Run[1] - (blueCheck_pos2rP[1] + 1)) ** 2)
+                    blueToPac[3] = ((ghost_Run[0] - (blueCheck_pos2rP[0] + 1)) ** 2 + (ghost_Run[1] - blueCheck_pos2rP[1]) ** 2)
                     blueToPac[blue_Dir[1]] = 1000000
 
                 for i in range(4):
@@ -361,8 +341,7 @@ def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
                     blue_Dir[0] = blueToPac.index(min(blueToPac))
                     blue_Dir[1] = ghost_DirB[blueToPac.index(min(blueToPac))]
 
-                blueNow_pos2rP[ghost_DirIndex[blue_Dir[0]][0]] = blueNow_pos2rP[ghost_DirIndex[blue_Dir[0]][0]] + \
-                                                                 ghost_DirIndex[blue_Dir[0]][1]
+                blueNow_pos2rP[ghost_DirIndex[blue_Dir[0]][0]] = blueNow_pos2rP[ghost_DirIndex[blue_Dir[0]][0]] + ghost_DirIndex[blue_Dir[0]][1]
 
             else:
                 blueEat -= 1
@@ -382,7 +361,6 @@ def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
 
             blueNow_pos[0] = blueNow_pos2rP[0] * size_L[1] + size_L[0]
             blueNow_pos[1] = blueNow_pos2rP[1] * size_L[1] + size_L[0]
-
             # -----------------------------blue-------------------------------
 
             # -----------------------------yellow-----------------------------
@@ -391,48 +369,34 @@ def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
 
             if yellowEat == 0:
                 if ghost_RunTime == 0:
-                    if ghostChScCheck < 0 or int(math.sqrt((pacNow_Pos2rP[0] - yellowNow_pos2rP[0]) ** 2 + (
-                            pacNow_Pos2rP[1] - (yellowNow_pos2rP[1])) ** 2)) < 24:
-                        yellowToPac[0] = ((yellow_disperse[0] - yellowCheck_pos2rP[0]) ** 2 + (
-                                    yellow_disperse[1] - (yellowCheck_pos2rP[1] - 1)) ** 2)
-                        yellowToPac[1] = ((yellow_disperse[0] - (yellowCheck_pos2rP[0] - 1)) ** 2 + (
-                                    yellow_disperse[1] - yellowCheck_pos2rP[1]) ** 2)
-                        yellowToPac[2] = ((yellow_disperse[0] - yellowCheck_pos2rP[0]) ** 2 + (
-                                    yellow_disperse[1] - (yellowCheck_pos2rP[1] + 1)) ** 2)
-                        yellowToPac[3] = ((yellow_disperse[0] - (yellowCheck_pos2rP[0] + 1)) ** 2 + (
-                                    yellow_disperse[1] - yellowCheck_pos2rP[1]) ** 2)
+                    if ghostChScCheck < 0 or int(math.sqrt((pacNow_Pos2rP[0] - yellowNow_pos2rP[0]) ** 2 + (pacNow_Pos2rP[1] - (yellowNow_pos2rP[1])) ** 2)) < 24:
+                        yellowToPac[0] = ((yellow_disperse[0] - yellowCheck_pos2rP[0]) ** 2 + (yellow_disperse[1] - (yellowCheck_pos2rP[1] - 1)) ** 2)
+                        yellowToPac[1] = ((yellow_disperse[0] - (yellowCheck_pos2rP[0] - 1)) ** 2 + (yellow_disperse[1] - yellowCheck_pos2rP[1]) ** 2)
+                        yellowToPac[2] = ((yellow_disperse[0] - yellowCheck_pos2rP[0]) ** 2 + (yellow_disperse[1] - (yellowCheck_pos2rP[1] + 1)) ** 2)
+                        yellowToPac[3] = ((yellow_disperse[0] - (yellowCheck_pos2rP[0] + 1)) ** 2 + (yellow_disperse[1] - yellowCheck_pos2rP[1]) ** 2)
                         yellowToPac[yellow_Dir[1]] = 1000000
 
                     else:
-                        yellowToPac[0] = ((pacNow_Pos2rP[0] - yellowCheck_pos2rP[0]) ** 2 + (
-                                    pacNow_Pos2rP[1] - (yellowCheck_pos2rP[1] - 1)) ** 2)
-                        yellowToPac[1] = ((pacNow_Pos2rP[0] - (yellowCheck_pos2rP[0] - 1)) ** 2 + (
-                                    pacNow_Pos2rP[1] - yellowCheck_pos2rP[1]) ** 2)
-                        yellowToPac[2] = ((pacNow_Pos2rP[0] - yellowCheck_pos2rP[0]) ** 2 + (
-                                    pacNow_Pos2rP[1] - (yellowCheck_pos2rP[1] + 1)) ** 2)
-                        yellowToPac[3] = ((pacNow_Pos2rP[0] - (yellowCheck_pos2rP[0] + 1)) ** 2 + (
-                                    pacNow_Pos2rP[1] - yellowCheck_pos2rP[1]) ** 2)
+                        yellowToPac[0] = ((pacNow_Pos2rP[0] - yellowCheck_pos2rP[0]) ** 2 + (pacNow_Pos2rP[1] - (yellowCheck_pos2rP[1] - 1)) ** 2)
+                        yellowToPac[1] = ((pacNow_Pos2rP[0] - (yellowCheck_pos2rP[0] - 1)) ** 2 + (pacNow_Pos2rP[1] - yellowCheck_pos2rP[1]) ** 2)
+                        yellowToPac[2] = ((pacNow_Pos2rP[0] - yellowCheck_pos2rP[0]) ** 2 + (pacNow_Pos2rP[1] - (yellowCheck_pos2rP[1] + 1)) ** 2)
+                        yellowToPac[3] = ((pacNow_Pos2rP[0] - (yellowCheck_pos2rP[0] + 1)) ** 2 + (pacNow_Pos2rP[1] - yellowCheck_pos2rP[1]) ** 2)
                         yellowToPac[yellow_Dir[1]] = 1000000
 
                 else:
                     ghost_Run[0] = random.randrange(7, 83)
                     ghost_Run[1] = random.randrange(7, 92)
-                    yellowToPac[0] = ((ghost_Run[0] - yellowCheck_pos2rP[0]) ** 2 + (
-                                ghost_Run[1] - (yellowCheck_pos2rP[1] - 1)) ** 2)
-                    yellowToPac[1] = ((ghost_Run[0] - (yellowCheck_pos2rP[0] - 1)) ** 2 + (
-                                ghost_Run[1] - yellowCheck_pos2rP[1]) ** 2)
-                    yellowToPac[2] = ((ghost_Run[0] - yellowCheck_pos2rP[0]) ** 2 + (
-                                ghost_Run[1] - (yellowCheck_pos2rP[1] + 1)) ** 2)
-                    yellowToPac[3] = ((ghost_Run[0] - (yellowCheck_pos2rP[0] + 1)) ** 2 + (
-                                ghost_Run[1] - yellowCheck_pos2rP[1]) ** 2)
+                    yellowToPac[0] = ((ghost_Run[0] - yellowCheck_pos2rP[0]) ** 2 + (ghost_Run[1] - (yellowCheck_pos2rP[1] - 1)) ** 2)
+                    yellowToPac[1] = ((ghost_Run[0] - (yellowCheck_pos2rP[0] - 1)) ** 2 + (ghost_Run[1] - yellowCheck_pos2rP[1]) ** 2)
+                    yellowToPac[2] = ((ghost_Run[0] - yellowCheck_pos2rP[0]) ** 2 + (ghost_Run[1] - (yellowCheck_pos2rP[1] + 1)) ** 2)
+                    yellowToPac[3] = ((ghost_Run[0] - (yellowCheck_pos2rP[0] + 1)) ** 2 + (ghost_Run[1] - yellowCheck_pos2rP[1]) ** 2)
 
                     yellowToPac[yellow_Dir[1]] = 1000000
 
                 for i in range(4):
                     yellowCheck_pos2rP[0] = yellowNow_pos2rP[0]
                     yellowCheck_pos2rP[1] = yellowNow_pos2rP[1]
-                    yellowCheck_pos2rP[ghost_DirIndex[i][0]] = yellowNow_pos2rP[ghost_DirIndex[i][0]] + \
-                                                               ghost_DirIndex[i][1]
+                    yellowCheck_pos2rP[ghost_DirIndex[i][0]] = yellowNow_pos2rP[ghost_DirIndex[i][0]] + ghost_DirIndex[i][1]
 
                     if str(yellowCheck_pos2rP) not in ghostRoadPos:
                         yellowToPac[i] = 1000000
@@ -444,9 +408,7 @@ def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
                     yellow_Dir[0] = yellowToPac.index(min(yellowToPac))
                     yellow_Dir[1] = ghost_DirB[yellowToPac.index(min(yellowToPac))]
 
-                yellowNow_pos2rP[ghost_DirIndex[yellow_Dir[0]][0]] = yellowNow_pos2rP[
-                                                                         ghost_DirIndex[yellow_Dir[0]][0]] + \
-                                                                     ghost_DirIndex[yellow_Dir[0]][1]
+                yellowNow_pos2rP[ghost_DirIndex[yellow_Dir[0]][0]] = yellowNow_pos2rP[ghost_DirIndex[yellow_Dir[0]][0]] + ghost_DirIndex[yellow_Dir[0]][1]
             else:
                 yellowEat -= 1
                 if yellowEat == 1 or yellowEat == 0:
@@ -465,49 +427,34 @@ def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
             yellowNow_pos[0] = yellowNow_pos2rP[0] * size_L[1] + size_L[0]
             yellowNow_pos[1] = yellowNow_pos2rP[1] * size_L[1] + size_L[0]
             # -----------------------------yellow-----------------------------
-            # -----------------------------pink-------------------------------
 
+            # -----------------------------pink-------------------------------
             pinkCheck_pos2rP[0] = int((pinkNow_pos[0] - size_L[0]) / size_L[1])
             pinkCheck_pos2rP[1] = int((pinkNow_pos[1] - size_L[0]) / size_L[1])
-
-            # pink_target = pacNow_Pos2rP
-            # print(pink_target, pacNow_Pos2rP)
 
             pink_target = [0, 0]
             pink_target[0] = pacNow_Pos2rP[0]
             pink_target[1] = pacNow_Pos2rP[1]
 
-            pink_target[pinkPakDirGet[pacDirIndex.index(getDir)][0]] = pink_target[
-                                                                           pinkPakDirGet[pacDirIndex.index(getDir)][
-                                                                               0]] + \
-                                                                       pinkPakDirGet[pacDirIndex.index(getDir)][1]
+            pink_target[pinkPakDirGet[pacDirIndex.index(getDir)][0]] = pink_target[pinkPakDirGet[pacDirIndex.index(getDir)][0]] + pinkPakDirGet[pacDirIndex.index(getDir)][1]
 
-            # print(pink_target, pacNow_Pos2rP)
             if pinkEat == 0:
                 if ghost_RunTime == 0:
                     if ghostChScCheck > 0:
 
-                        pinkToPac[0] = ((pink_target[0] - pinkCheck_pos2rP[0]) ** 2 + (
-                                    pink_target[1] - (pinkCheck_pos2rP[1] - 1)) ** 2)
-                        pinkToPac[1] = ((pink_target[0] - (pinkCheck_pos2rP[0] - 1)) ** 2 + (
-                                    pink_target[1] - pinkCheck_pos2rP[1]) ** 2)
-                        pinkToPac[2] = ((pink_target[0] - pinkCheck_pos2rP[0]) ** 2 + (
-                                    pink_target[1] - (pinkCheck_pos2rP[1] + 1)) ** 2)
-                        pinkToPac[3] = ((pink_target[0] - (pinkCheck_pos2rP[0] + 1)) ** 2 + (
-                                    pink_target[1] - pinkCheck_pos2rP[1]) ** 2)
+                        pinkToPac[0] = ((pink_target[0] - pinkCheck_pos2rP[0]) ** 2 + (pink_target[1] - (pinkCheck_pos2rP[1] - 1)) ** 2)
+                        pinkToPac[1] = ((pink_target[0] - (pinkCheck_pos2rP[0] - 1)) ** 2 + (pink_target[1] - pinkCheck_pos2rP[1]) ** 2)
+                        pinkToPac[2] = ((pink_target[0] - pinkCheck_pos2rP[0]) ** 2 + (pink_target[1] - (pinkCheck_pos2rP[1] + 1)) ** 2)
+                        pinkToPac[3] = ((pink_target[0] - (pinkCheck_pos2rP[0] + 1)) ** 2 + (pink_target[1] - pinkCheck_pos2rP[1]) ** 2)
                         pinkToPac[pink_Dir[1]] = 1000000
 
                         ghostChScCheck -= 1
 
                     else:
-                        pinkToPac[0] = ((pink_disperse[0] - pinkCheck_pos2rP[0]) ** 2 + (
-                                    pink_disperse[1] - (pinkCheck_pos2rP[1] - 1)) ** 2)
-                        pinkToPac[1] = ((pink_disperse[0] - (pinkCheck_pos2rP[0] - 1)) ** 2 + (
-                                    pink_disperse[1] - pinkCheck_pos2rP[1]) ** 2)
-                        pinkToPac[2] = ((pink_disperse[0] - pinkCheck_pos2rP[0]) ** 2 + (
-                                    pink_disperse[1] - (pinkCheck_pos2rP[1] + 1)) ** 2)
-                        pinkToPac[3] = ((pink_disperse[0] - (pinkCheck_pos2rP[0] + 1)) ** 2 + (
-                                    pink_disperse[1] - pinkCheck_pos2rP[1]) ** 2)
+                        pinkToPac[0] = ((pink_disperse[0] - pinkCheck_pos2rP[0]) ** 2 + (pink_disperse[1] - (pinkCheck_pos2rP[1] - 1)) ** 2)
+                        pinkToPac[1] = ((pink_disperse[0] - (pinkCheck_pos2rP[0] - 1)) ** 2 + (pink_disperse[1] - pinkCheck_pos2rP[1]) ** 2)
+                        pinkToPac[2] = ((pink_disperse[0] - pinkCheck_pos2rP[0]) ** 2 + (pink_disperse[1] - (pinkCheck_pos2rP[1] + 1)) ** 2)
+                        pinkToPac[3] = ((pink_disperse[0] - (pinkCheck_pos2rP[0] + 1)) ** 2 + (pink_disperse[1] - pinkCheck_pos2rP[1]) ** 2)
                         pinkToPac[pink_Dir[1]] = 1000000
 
                         ghostChScCheck += 1
@@ -515,14 +462,10 @@ def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
                 else:
                     ghost_Run[0] = random.randrange(7, 83)
                     ghost_Run[1] = random.randrange(7, 92)
-                    pinkToPac[0] = ((ghost_Run[0] - pinkCheck_pos2rP[0]) ** 2 + (
-                                ghost_Run[1] - (pinkCheck_pos2rP[1] - 1)) ** 2)
-                    pinkToPac[1] = ((ghost_Run[0] - (pinkCheck_pos2rP[0] - 1)) ** 2 + (
-                                ghost_Run[1] - pinkCheck_pos2rP[1]) ** 2)
-                    pinkToPac[2] = ((ghost_Run[0] - pinkCheck_pos2rP[0]) ** 2 + (
-                                ghost_Run[1] - (pinkCheck_pos2rP[1] + 1)) ** 2)
-                    pinkToPac[3] = ((ghost_Run[0] - (pinkCheck_pos2rP[0] + 1)) ** 2 + (
-                                ghost_Run[1] - pinkCheck_pos2rP[1]) ** 2)
+                    pinkToPac[0] = ((ghost_Run[0] - pinkCheck_pos2rP[0]) ** 2 + (ghost_Run[1] - (pinkCheck_pos2rP[1] - 1)) ** 2)
+                    pinkToPac[1] = ((ghost_Run[0] - (pinkCheck_pos2rP[0] - 1)) ** 2 + (ghost_Run[1] - pinkCheck_pos2rP[1]) ** 2)
+                    pinkToPac[2] = ((ghost_Run[0] - pinkCheck_pos2rP[0]) ** 2 + (ghost_Run[1] - (pinkCheck_pos2rP[1] + 1)) ** 2)
+                    pinkToPac[3] = ((ghost_Run[0] - (pinkCheck_pos2rP[0] + 1)) ** 2 + (ghost_Run[1] - pinkCheck_pos2rP[1]) ** 2)
                     pinkToPac[pink_Dir[1]] = 1000000
 
                 for i in range(4):
@@ -539,8 +482,7 @@ def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
                     pink_Dir[0] = pinkToPac.index(min(pinkToPac))
                     pink_Dir[1] = ghost_DirB[pinkToPac.index(min(pinkToPac))]
 
-                pinkNow_pos2rP[ghost_DirIndex[pink_Dir[0]][0]] = pinkNow_pos2rP[ghost_DirIndex[pink_Dir[0]][0]] + \
-                                                                 ghost_DirIndex[pink_Dir[0]][1]
+                pinkNow_pos2rP[ghost_DirIndex[pink_Dir[0]][0]] = pinkNow_pos2rP[ghost_DirIndex[pink_Dir[0]][0]] + ghost_DirIndex[pink_Dir[0]][1]
 
             else:
                 pinkEat -= 1
@@ -562,8 +504,8 @@ def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
 
             pinkNow_pos[0] = pinkNow_pos2rP[0] * size_L[1] + size_L[0]
             pinkNow_pos[1] = pinkNow_pos2rP[1] * size_L[1] + size_L[0]
-
             # -----------------------------pink-------------------------------
+
             # -----------------------------cookie-------------------------------
             if str(pacNow_Pos2rP) in cookiePosition:
                 cookiePosition.remove(str(pacNow_Pos2rP))
@@ -571,20 +513,137 @@ def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
             if str(pacNow_Pos2rP) in cookieBigPosition:
                 cookieBigPosition.remove(str(pacNow_Pos2rP))
                 ghost_RunTime = 150
-
             # -----------------------------cookie-------------------------------
-            if len(cookiePosition) == 0 and len(cookieBigPosition) == 0:
-                pacNow_Pos[0] = (44 * size_L[1]) + size_L[0]
-                pacNow_Pos[1] = (55 * size_L[1]) + size_L[0]
-                pacNext_Pos[0] = pacNow_Pos[0]
-                pacOld_Pos[1] = pacNow_Pos[1]
-                pacOld_Pos[0] = pacNow_Pos[0]
-                pacOld_Pos[1] = pacNow_Pos[1]
 
-                startScreen = 69
-                gameStage += 1
+            # -----------------------------score-------------------------------
+            pacJudgment[4] = pacNow_Pos2rP
+            redJudgment[4] = redNow_pos2rP
+            blueJudgment[4] = blueNow_pos2rP
+            yellowJudgment[4] = yellowNow_pos2rP
+            pinkJudgment[4] = pinkNow_pos2rP
+            for i in range(4):
+                pacJudgment[i][0] = pacNow_Pos2rP[0] + judgmentPlus[i][0]
+                pacJudgment[i][1] = pacNow_Pos2rP[1] + judgmentPlus[i][1]
+                redJudgment[i][0] = redNow_pos2rP[0] + judgmentPlus[i][0]
+                redJudgment[i][1] = redNow_pos2rP[1] + judgmentPlus[i][1]
+                blueJudgment[i][0] = blueNow_pos2rP[0] + judgmentPlus[i][0]
+                blueJudgment[i][1] = blueNow_pos2rP[1] + judgmentPlus[i][1]
+                yellowJudgment[i][0] = yellowNow_pos2rP[0] + judgmentPlus[i][0]
+                yellowJudgment[i][1] = yellowNow_pos2rP[1] + judgmentPlus[i][1]
+                pinkJudgment[i][0] = pinkNow_pos2rP[0] + judgmentPlus[i][0]
+                pinkJudgment[i][1] = pinkNow_pos2rP[1] + judgmentPlus[i][1]
 
-                cookiePosition = data.splitlines()
+            if ghost_RunTime != 0:
+                bre = True
+                for i in range(5):
+                    for j in range(5):
+                        if pacJudgment[i] == redJudgment[j]:
+                            redEat = ghost_RunTime
+                            bre = False
+                            break
+                    if not bre:
+                        break
+
+                bre = True
+                for i in range(5):
+                    for j in range(5):
+                        if pacJudgment[i] == blueJudgment[j]:
+                            blueEat = ghost_RunTime
+                            bre = False
+                            break
+                    if not bre:
+                        break
+
+                bre = True
+                for i in range(5):
+                    for j in range(5):
+                        if pacJudgment[i] == yellowJudgment[j]:
+                            yellowEat = ghost_RunTime
+                            bre = False
+                            break
+                    if not bre:
+                        break
+
+                bre = True
+                for i in range(5):
+                    for j in range(5):
+                        if pacJudgment[i] == pinkJudgment[j]:
+                            pinkEat = ghost_RunTime
+                            bre = False
+                            break
+                    if not bre:
+                        break
+            # -----------------------------score-------------------------------
+
+            # -----------------------------death-------------------------------
+            else:
+                for i in range(5):
+                    if pacJudgment[i] in redJudgment or pacJudgment[i] in blueJudgment or pacJudgment[
+                        i] in yellowJudgment or pacJudgment[i] in pinkJudgment:
+                        pacNow_Pos[0] = (44 * size_L[1]) + size_L[0]
+                        pacNow_Pos[1] = (55 * size_L[1]) + size_L[0]
+                        pacNext_Pos[0] = pacNow_Pos[0]
+                        pacOld_Pos[1] = pacNow_Pos[1]
+                        pacOld_Pos[0] = pacNow_Pos[0]
+                        pacOld_Pos[1] = pacNow_Pos[1]
+
+                        redNow_pos[0] = (40 * size_L[1]) + size_L[0]
+                        redNow_pos[1] = (34 * size_L[1]) + size_L[0]
+                        redNow_pos2rP[0] = 40
+                        redNow_pos2rP[1] = 34
+                        red_Dir = [0, 2]
+                        redEat = 0
+
+                        blueNow_pos[0] = (43 * size_L[1]) + size_L[0]
+                        blueNow_pos[1] = (34 * size_L[1]) + size_L[0]
+                        blueNow_pos2rP[0] = 43
+                        blueNow_pos2rP[1] = 34
+                        blue_Dir = [1, 3]
+                        blueEat = 0
+
+                        yellowNow_pos[0] = (46 * size_L[1]) + size_L[0]
+                        yellowNow_pos[1] = (34 * size_L[1]) + size_L[0]
+                        yellowNow_pos2rP[0] = 46
+                        yellowNow_pos2rP[1] = 34
+                        yellow_Dir = [3, 1]
+                        yellowEat = 0
+
+                        pinkNow_pos[0] = (49 * size_L[1]) + size_L[0]
+                        pinkNow_pos[1] = (34 * size_L[1]) + size_L[0]
+                        pinkNow_pos2rP[0] = 49
+                        pinkNow_pos2rP[1] = 34
+                        pink_Dir = [2, 0]
+                        pinkEat = 0
+
+                        ghostChScCheck = 0
+                        ghostChScTimeIndex = 0
+                        ghost_RunTime = 0
+                        ghost_imgCount = 3
+
+                        startScreen = 59
+                        pacLife -= 1
+
+                        start_img = pygame.image.load("./image/stage" + size_L[4] + "0.png")
+                        start_rect = start_img.get_rect()
+                        start_rect.center = startCenter
+                        break
+                # -----------------------------death-------------------------------
+
+        # -----------------------------game over-------------------------------
+        while pacLife < 0:
+
+            gameOverImg = pygame.image.load("./image/game over" + size_L[4] + ".png")
+            gameOverImg_rect = gameOverImg.get_rect()
+            gameOverImg_rect.center = startCenter
+
+            screen.blit(gameOverImg, gameOverImg_rect)
+            pygame.display.update()
+
+            for event2 in pygame.event.get():
+                if event2.type == QUIT:
+                    pygame.quit()
+                    sys.exit
+        # -----------------------------game over-------------------------------
 
         # -----------------------------clear-------------------------------
         if len(cookiePosition) == 0 and len(cookieBigPosition) == 0:
@@ -636,6 +695,7 @@ def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
             cookieBigPosition = ['[7, 22]', '[82, 22]', '[7, 91]', '[82, 91]']
 
             start_img = pygame.image.load("./image/clear" + size_L[4] + ".png")
+            # -----------------------------clear-------------------------------
 
         # ---- image reset ----
 
@@ -658,6 +718,18 @@ def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
         cookieBig_rect = cookieBig_image.get_rect()
 
         screen.blit(background, (0, 0))
+
+        # ---- life ----
+        pacLife_image = pygame.image.load("./image/pac_man" + size_L[4] + "2ri.png")
+        pacLife_rect = pacLife_image.get_rect()
+        prc = [0, 0]
+        if pacLife > 0:
+            for i in range(pacLife):
+                prc[0] = pacLifePos[i][0] * size_L[1] + size_L[0]
+                prc[1] = pacLifePos[i][1] * size_L[1] + size_L[0]
+                pacLife_rect.center = prc
+                screen.blit(pacLife_image, pacLife_rect)
+        # ---- life ----
 
         for i in cookiePosition:
             i = re.sub(r"[^ 0-9]", "", i)
@@ -696,6 +768,7 @@ def playGame(pacNext_XY, pacNext_Value, size_L, getDir):
 
         pygame.display.update()
         # ---- image reset ----
+
         for event2 in pygame.event.get():
             if event2.type == QUIT:
                 pygame.quit()
